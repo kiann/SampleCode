@@ -1,0 +1,7 @@
+# javaFX 使用
+/.git
+/.idea
+out
+
+*.iml
+*.DS_Store
