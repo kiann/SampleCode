@@ -1,5 +1,7 @@
 package com.soar.locallay.util;
-
+/**
+ *  日志工具类
+ */
 public class L {
     private static String className;
 
