@@ -1,13 +1,8 @@
-package com.soar.camerapre.util;
+package com.pd.util;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-
-import com.soar.camerapre.guider.GuiderActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +15,14 @@ import java.util.List;
 public class PermissionUtil {
     private static int fd;
 
-    public static String[] checkFirst(Context context, String[] permissions) {
+    public static String[] checkFirst(Activity context, String[] permissions) {
         if (Build.VERSION.SDK_INT < 23) {
             return new String[0];
         }
         List<String> needRequest = new ArrayList<>();
         for (String str : permissions) {
-            int ret = ContextCompat.checkSelfPermission(context, str);
+
+            int ret = context.checkSelfPermission(str);
             if (ret != PackageManager.PERMISSION_GRANTED) {
                 needRequest.add(str);
             }
@@ -36,7 +32,7 @@ public class PermissionUtil {
 
     public static int request(Activity activity, String[] permissions) {
         fd++;
-        ActivityCompat.requestPermissions(activity, permissions, fd);
+        activity.requestPermissions(permissions, fd);
         return fd;
     }
 
@@ -46,7 +42,7 @@ public class PermissionUtil {
         for (int i = 0; i < grantResults.length; i++) {
             if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                 temp.add(permissions[i]);
-                if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, permissions[i])) {
+                if (!activity.shouldShowRequestPermissionRationale(permissions[i])) {
                     result.notAskAgain = true;
                 }
             }
