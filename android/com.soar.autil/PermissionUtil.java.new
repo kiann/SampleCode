@@ -1,9 +1,8 @@
-package com.soar.camerapre.util;
+package com.pd.util;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.v4.app.ActivityCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +32,7 @@ public class PermissionUtil {
 
     public static int request(Activity activity, String[] permissions) {
         fd++;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            activity.requestPermissions(permissions, fd);
-        } else {
-            ActivityCompat.requestPermissions(activity, permissions, fd);
-        }
+        activity.requestPermissions(permissions, fd);
         return fd;
     }
 
@@ -47,14 +42,8 @@ public class PermissionUtil {
         for (int i = 0; i < grantResults.length; i++) {
             if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                 temp.add(permissions[i]);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (!activity.shouldShowRequestPermissionRationale(permissions[i])) {
-                        result.notAskAgain = true;
-                    }
-                } else {
-                    if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, permissions[i])) {
-                        result.notAskAgain = true;
-                    }
+                if (!activity.shouldShowRequestPermissionRationale(permissions[i])) {
+                    result.notAskAgain = true;
                 }
             }
         }
