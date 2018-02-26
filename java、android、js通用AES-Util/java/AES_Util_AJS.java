@@ -1,7 +1,5 @@
 package com.soar.util;
 
-import com.soar.util.base64.Base64;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -48,7 +46,7 @@ public class AES_Util_AJS {
             cipher.init(Cipher.ENCRYPT_MODE, keyspec, ivspec);
             byte[] encrypted = cipher.doFinal(plaintext);
 
-            return new Base64().encodeToString(encrypted);
+            return Hex.toHex(encrypted);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,7 +56,7 @@ public class AES_Util_AJS {
 
     public static String decrypt(String data, String key) {
         try {
-            byte[] encrypted1 = new Base64().decode(data);
+            byte[] encrypted1 = Hex.toByte(data);
 
             Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
             SecretKeySpec keyspec = new SecretKeySpec(key.getBytes(), "AES");
@@ -72,6 +70,36 @@ public class AES_Util_AJS {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    private static class Hex {
+        public static byte[] toByte(String hex) {
+            int len = (hex.length() / 2);
+            byte[] result = new byte[len];
+            char[] achar = hex.toCharArray();
+            for (int i = 0; i < len; i++) {
+                int pos = i * 2;
+                result[i] = (byte) (toByte(achar[pos]) << 4 | toByte(achar[pos + 1]));
+            }
+            return result;
+        }
+
+        public static String toHex(byte[] bytes) {
+            StringBuffer sb = new StringBuffer(bytes.length);
+            String sTemp;
+            for (int i = 0; i < bytes.length; i++) {
+                sTemp = Integer.toHexString(0xFF & bytes[i]);
+                if (sTemp.length() < 2)
+                    sb.append(0);
+                sb.append(sTemp.toUpperCase());
+            }
+            return sb.toString();
+        }
+
+        private static byte toByte(char c) {
+            byte b = (byte) "0123456789ABCDEF".indexOf(c);
+            return b;
         }
     }
 }

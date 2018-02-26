@@ -16,15 +16,18 @@ var aesUtil = {
 	encrypt: function(content, key) {
 		var k = CryptoJS.enc.Latin1.parse(key);
 		var iv = CryptoJS.enc.Latin1.parse('0123456789012345');
-		return CryptoJS.AES.encrypt(content, k, {
+		var re = CryptoJS.AES.encrypt(content, k, {
 			iv: iv,
 			mode: CryptoJS.mode.CBC,
 			padding: CryptoJS.pad.ZeroPadding
-		}).toString();
+		});
+		return re.ciphertext.toString().toUpperCase();
 	},
 	decrypt: function(content, key) {
 		var k = CryptoJS.enc.Latin1.parse(key);
 		var iv = CryptoJS.enc.Latin1.parse('0123456789012345');
+		content = CryptoJS.enc.Hex.parse(content);
+		content = CryptoJS.enc.Base64.stringify(content);
 		var bytes = CryptoJS.AES.decrypt(content, k, {
 			iv: iv,
 			mode: CryptoJS.mode.CBC,
@@ -33,4 +36,3 @@ var aesUtil = {
 		return bytes.toString(CryptoJS.enc.Utf8);
 	}
 };
-
